@@ -1,3 +1,8 @@
+# Nateli - Home Assistant
+# Author Danilo Ribeiro
+# Scientific Initiation Scholarships Project
+# Jul - 2020
+
 import speech_recognition as sr
 import pyttsx3
 from wit import Wit
