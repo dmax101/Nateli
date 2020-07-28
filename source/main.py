@@ -8,25 +8,38 @@ import pyttsx3
 from wit import Wit
 import logging
 from pprint import pprint
+import requests
+import json
 
-client = Wit("CTTWNKS7IKLBJ2XWHNNZLCZJNSFL2BBJ")
+auth_token = "PG4WVUCICSUSXDDKHF76RXPPOOMMOR2V"
+hed = {'Authorization': 'Bearer ' + auth_token}
+url = 'https://api.wit.ai/entities?v=20200728'
+
+client = Wit(auth_token)
+entities_list = requests.get(url, headers=hed)
+
+
+
 rec = sr.Recognizer()
 
 reproduction = pyttsx3.init()
+
+
+pprint(entities_list.json())
 
 def sai_som(resp):
     reproduction.say(resp)
     reproduction.runAndWait()
 
-def response(self, entities, intents, text, traits):
-    if (intents['name'] == 'action') and (intents['confidence'] > 0.6):
+def response(entities, intents, text, traits):
+    if (intents['name'] == 'action'):
         if not entities:
             sai_som("não encontrei nada")
         else:
-            if entities['value'] == 'on':
-                sai_som('ligado')
+            if traits['value'] == 'on':
+                sai_som('ligando {}'.format(entities['room:room']['value']))
             else:
-                sai_som('desligado ligado')
+                sai_som('desligado {}'.format(entities['room:room']['value']))
     
 def response_checker(self, response):
     if not response:
@@ -38,7 +51,6 @@ while True:
         rec.adjust_for_ambient_noise(s)
         while True:
             try:
-                
                 print("ouvindo...")
                 audio = rec.listen(s)
                 entrada = rec.recognize_google(audio, language="pt")
@@ -46,17 +58,37 @@ while True:
 
                 resp = client.message(entrada)
 
-                pprint(resp)
+                #pprint(resp)
 
-                resp_value = resp['traits']['wit$on_off'][0]['value']
-
-
-                if resp_value == 'on':
-                    sai_som("Acionando")
-                elif resp_value == 'off':
-                    sai_som("Desligando")
+                entities = resp['entities']
+                pprint(entities)
+                
+                if not entities:
+                    print(False)
                 else:
-                    sai_som("Repita")
+                    print(True)
+
+                #intents = resp['intents']
+                #text = resp['text']
+                #traits = resp ['traits']
+
+                #response(entities, intents, text, traits)
+
+
+                ######################################
+
+                # resp_value = resp['traits']['wit$on_off'][0]['value']
+
+                # if resp_value == 'on':
+                #    sai_som("Acionando")
+                #elif resp_value == 'off':
+                #    sai_som("Desligando")
+                #else:
+                #    sai_som("Repita")
+
+                ######################################
+
+
 
             except sr.UnknownValueError:
                 print("Não Entendi")
