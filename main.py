@@ -12,6 +12,7 @@ from modules.wit_connector import wit_connection
 from modules.wit_connector import wit_attributes
 from modules.sound_output import speak
 from modules.geolocation import get_geolocation
+from modules.analysis import analysis
 
 auth_token = "PG4WVUCICSUSXDDKHF76RXPPOOMMOR2V"
 
@@ -38,9 +39,11 @@ while True:
 
                 pprint(resp)
 
+                analysis(resp)
+
             except sr.UnknownValueError:
                 print("Não Entendi")
             
             except KeyError:
                 print("Erro de chave")
-                sai_som("Erro de chave")
+                speak("Erro de chave")
