@@ -11,4 +11,6 @@ def get_weather(city):
     print("Getting weather from {}".format(city))
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units={}&appid={}'.format(urllib.parse.quote(city), units, api_id)
     print(url)
-    return requests.get(url).json()
+
+    weather = requests.get(url).json()
+    return weather

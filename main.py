@@ -7,11 +7,10 @@ import speech_recognition as sr
 from pprint import pprint
 import json
 
-from modules.openweather import get_weather
+
 from modules.wit_connector import wit_connection
 from modules.wit_connector import wit_attributes
 from modules.sound_output import speak
-from modules.geolocation import get_geolocation
 from modules.analysis import analysis
 
 auth_token = "PG4WVUCICSUSXDDKHF76RXPPOOMMOR2V"
@@ -20,7 +19,7 @@ client = wit_connection(auth_token)
 
 rec = sr.Recognizer()
 
-print(get_weather(get_geolocation()['city']))
+
 
 speak("Bem vindo!")
 
@@ -45,5 +44,5 @@ while True:
                 print("Não Entendi")
             
             except KeyError:
+                speak("Não entendi, poderia repetir por favor?")
                 print("Erro de chave")
-                speak("Erro de chave")

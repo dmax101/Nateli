@@ -1,5 +1,8 @@
 from pprint import pprint
 from modules.sound_output import speak
+from modules.openweather import get_weather
+from modules.geolocation import get_geolocation
+from googletrans import Translator
 
 def analysis(content):
     """
@@ -9,6 +12,31 @@ def analysis(content):
         speak('Não entendi. Por favor repita a pergunta')
     elif content['intents'][0]['name'] == 'greeting':
         speak('Olá, como posso ajudar?')
+    elif content['intents'][0]['name'] == 'location_get':
+        city = get_geolocation()['city']
+        speak('{} é a cidade onde estamos'.format(city))
+    elif (content['intents'][0]['name'] == 'weather') or (content['intents'][0]['name'] == 'temperature_get'):
+
+
+        city = get_geolocation()['city']
+        print(city)
+        weather = get_weather(city)
+
+        print(weather)
+
+        temp = int(round(weather['main']['temp'], 0))
+        #temp_min = int(round(weather['main']['temp_min'], 0))
+        #temp_max = int(round(weather['main']['temp_max'], 0))
+        translator = Translator()
+        weather_description = translator.translate(weather['weather'][0]['description'], dest='pt').text
+
+
+        #print('{}: A temperatura é de {} graus Celcios com máxima de {} e mínima de {}'.format(city, temp, temp_max, temp_min))
+        #speak('{}: A temperatura é de {} graus Celcios com máxima de {} e mínima de {}'.format(city, temp, temp_max, temp_min))
+        
+        print('{}: A temperatura é de {} graus Celcios com {}'.format(city, temp, weather_description))
+        speak('{}: A temperatura é de {} graus Celcios com {}'.format(city, temp, weather_description))
+        
     elif content['intents'][0]['name'] == 'action':
         if not content['traits']:
             speak('Não entendi. Pergunte novamente!')
