@@ -19,8 +19,6 @@ client = wit_connection(auth_token)
 
 rec = sr.Recognizer()
 
-
-
 speak("Bem vindo!")
 
 while True:
